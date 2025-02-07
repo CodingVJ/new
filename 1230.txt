@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> - mywebapplication</title>
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/site.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0" />
+    <link rel="stylesheet" href="/mywebapplication.styles.css?v=zxOcHQGdDLeUvnrp86ac0ZpD84jxZQafrhpJ_jHokFU" />
+</head>
+<body>
+    <header b-616rsohojn>
+        <nav b-616rsohojn class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div b-616rsohojn class="container-fluid">
+                <a class="navbar-brand" href="/Home">mywebapplication</a>
+                <button b-616rsohojn class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span b-616rsohojn class="navbar-toggler-icon"></span>
+                </button>
+                <div b-616rsohojn class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul b-616rsohojn class="navbar-nav flex-grow-1">
+                        <li b-616rsohojn class="nav-item">
+                            <a class="nav-link text-dark" href="/Home">Home</a>
+                        </li>
+                        <li b-616rsohojn class="nav-item">
+                            <a class="nav-link text-dark" href="/Home/Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div b-616rsohojn class="container">
+        <main b-616rsohojn role="main" class="pb-3">
+            
+<h2>Users List</h2>
+
+<button id="btnAddUser">Add New User</button>
+<div id="userModal" style="display:none; position:fixed; top:0; left:50%; transform:translateX(-50%); width:400px; background:#fff; padding:20px; box-shadow:0 4px 8px rgba(0,0,0,0.2); border-radius:5px;">
+    <div style="position:relative;">
+        <span id="closeModal" style="cursor:pointer; position:absolute; top:10px; right:10px; font-size:20px;">X</span>
+        <div id="modalContent">
+            <p>User Registration Form Goes Here</p>
+        </div>
+    </div>
+</div>
+
+<div id="editModal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+    width:400px; background:#fff; padding:20px; box-shadow:0 4px 8px rgba(0,0,0,0.2); border-radius:5px;">
+    <div style="position:relative;">
+        <span id="closeModal" style="cursor:pointer; position:absolute; top:10px; right:10px; font-size:20px;">X</span>
+        <div id="editContent"></div>
+    </div>
+</div>
+
+<div id="tabledata">
+	<table class="table">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+			<tr id="row-11">
+				<td>balakumar</td>
+				<td>bala@gmail.com</td>
+				<td>
+					
+					<button class="delete-btn" data-id="11">Delete</button>
+					<button class="edit-btn" data-id="11">Edit</button>
+				</td>
+			</tr>
+			<tr id="row-12">
+				<td>balakumar</td>
+				<td>bala@gmail.com</td>
+				<td>
+					
+					<button class="delete-btn" data-id="12">Delete</button>
+					<button class="edit-btn" data-id="12">Edit</button>
+				</td>
+			</tr>
+			<tr id="row-15">
+				<td>vijay</td>
+				<td>vijay@134</td>
+				<td>
+					
+					<button class="delete-btn" data-id="15">Delete</button>
+					<button class="edit-btn" data-id="15">Edit</button>
+				</td>
+			</tr>
+			<tr id="row-16">
+				<td>balakumar</td>
+				<td>r@gmail.vcom</td>
+				<td>
+					
+					<button class="delete-btn" data-id="16">Delete</button>
+					<button class="edit-btn" data-id="16">Edit</button>
+				</td>
+			</tr>
+			<tr id="row-17">
+				<td>vijay</td>
+				<td>vijay@134</td>
+				<td>
+					
+					<button class="delete-btn" data-id="17">Delete</button>
+					<button class="edit-btn" data-id="17">Edit</button>
+				</td>
+			</tr>
+	</tbody>
+</table>
+</div>
+
+
+<script src="/lib/jquery/dist/jquery.min.js"></script>
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        $("#btnAddUser").click(function () {
+            $.ajax({
+                url: "/User/Register", // Call Register Partial View
+                type: "GET",
+                success: function (data) {
+                    $("#modalContent").html(data); // Load form in modal
+                    $("#userModal").show(); // Show modal
+                }
+            });
+        });
+
+        // Close modal when clicking 'X'
+        $("#closeModal").click(function () {
+            $("#userModal").hide();
+        });
+    });
+
+
+    $(document).on("submit", "#registerForm", function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/User/RegisterUser",
+            type: "POST",
+            data: $(this).serialize(),
+            success: function (response) {
+                console.log(response)
+                if (response.success) {
+                    $("#userModal").hide(); // Close modal
+                    loadUserTable(); // Refresh Table
+                } else {
+                     $("#modalContent").html(response);
+                }
+            }
+        });
+    });
+
+    function loadUserTable() {
+        $.ajax({
+            url: "/User/UpdatedIndex",
+            type: "GET",
+            success: function (data) {
+                $("#tabledata").html(data);
+            }
+        });
+    }
+
+    $(document).ready(function () {
+
+        // setInterval(function () {
+        //     $.ajax({
+        //         url: "/User/IncrementCounter",
+        //         type: "POST",
+        //         success: function (data) {
+        //             $("#counterValue").text(data.count);
+        //         }
+        //     });
+        // }, 2000);
+
+
+        //     $.ajax({
+        //         url: "/User/UpdatedIndex",
+        //         type: "GET",
+        //         success: function (data) {
+        //             $("#partialview").html(data);
+        //         }
+        //     });
+
+        //      $.ajax({
+        //         url: "/User/UpdatedIndexView",
+        //         type: "GET",
+        //         success: function (data) {
+        //             $("#view").html(data);
+        //         }
+        //     });
+
+        // setInterval(function () {
+        //     $.ajax({
+        //         url: "/User/UpdatedIndex",
+        //         type: "GET",
+        //         success: function (data) {
+        //             $("#tabledata").html(data);
+        //         }
+        //     });
+        // }, 5000);
+
+        // $("#increasebtn").click(function (e) {
+        //     console.log(e);
+        //     console.log("Increase Event Triggered");
+        //     $.ajax({
+        //         url: "/User/IncrementCounter",
+        //         type: "POST",
+        //         success: function (data) {
+        //             $("#counterValue").text(data.count);
+        //         }
+        //     });
+        // });
+
+        // $("#decreasebtn").click(function (e) {
+        //     console.log(e);
+        //     console.log("Decrease Event Triggered");
+        //     $.ajax({
+        //         url: "/User/DecrementCounter",
+        //         type: "POST",
+        //         success: function (data) {
+        //             $("#counterValue").text(data.count);
+        //         }
+        //     });
+        // });
+
+        // $("#resetbtn").click(function (e) {
+        //     console.log(e);
+        //     console.log("Reset Event Triggered");
+        //     $.ajax({
+        //         url: "/User/ResetCounter",
+        //         type: "POST",
+        //         success: function (data) {
+        //             $("#counterValue").text(data.count);
+        //         }
+        //     });
+        // });
+
+        // $("#deletebtn").click(function (e) {
+        //     console.log(e);
+        //     console.log("Delete Event Triggered");
+        //     $.ajax({
+        //         url: "/User/DeleteUser",
+        //         type: "POST",
+        //         success: function (data) {
+        //             $("#counterValue").text(data.count);
+        //         }
+        //     });
+        // });
+
+        $(".delete-btn").click(function () {
+            var userId = $(this).data("id");
+
+            if (!confirm("Are you sure you want to delete this user?")) {
+                return;
+            }
+
+            $.ajax({
+                url: "/User/Delete",
+                type: "POST",
+                data: { id: userId },
+                success: function (response) {
+                    if (response.success) {
+                        $("#row-" + userId).remove(); // Remove the row from table
+                        alert("User deleted successfully.");
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while deleting the user.");
+                }
+            });
+        });
+    });
+
+
+    $(document).ready(function () {
+        $(".edit-btn").click(function () {
+            var userId = $(this).data("id");
+
+            $.ajax({
+                url: "/User/Edit/" + userId,
+                type: "GET",
+                success: function (data) {
+                    $("#editContent").html(data);
+                    $("#editModal").show();
+                }
+            });
+        });
+
+        // Close Modal
+        $("#closeModal").click(function () {
+            $("#editModal").hide();
+        });
+
+        // Handle form submission via AJAX
+        $(document).on("submit", "#editForm", function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/User/Update",
+                type: "POST",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        var userId = $("#editForm input[name='Id']").val();
+                        var newName = $("#editForm input[name='Name']").val();
+                        var newEmail = $("#editForm input[name='Email']").val();
+
+                        // Update the table
+                        $("#name-" + userId).text(newName);
+                        $("#email-" + userId).text(newEmail);
+
+                        $("#editModal").hide();
+                    }
+                }
+            });
+        });
+    });
+
+    
+
+
+      
+</script>
+
+        </main>
+    </div>
+
+    <footer b-616rsohojn class="border-top footer text-muted">
+        <div b-616rsohojn class="container">
+            &copy; 2025 - mywebapplication - <a href="/Home/Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/site.js?v=hRQyftXiu1lLX2P9Ly9xa4gHJgLeR1uGN5qegUobtGo"></script>
+    
+
+<!-- Visual Studio Browser Link -->
+<script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestId="0d8058445d26431090118b5ae576c70f" data-requestMappingFromServer="false" data-connectUrl="http://localhost:52538/91c5f130204e4ae8a7aabc34c9edbb46/browserLink"></script>
+<!-- End Browser Link -->
+<script src="/_framework/aspnetcore-browser-refresh.js"></script></body>
+</html>
